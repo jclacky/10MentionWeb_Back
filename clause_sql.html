@@ -60,6 +60,14 @@
                               <li>Supprimer une BDD <strong><code>DROP DATABASE IF EXISTS nomBDD</code></strong></li>
                               <li>Observer la description d'une BDD <strong><code>DESC nomTable</code></strong></li>
                               <li>Voir les BDD dans le serveur : <strong><code>SHOW DATABASES</code></strong></li>
+                              <li>
+                                   Rajouter un champs dans une table existante : 
+                                   <strong>
+                                        <code>
+                                             ALTER TABLE nom_de_table ADD nom_nouvelle_colonne VARCHAR(255) AFTER nom_colonne_existante
+                                        </code>
+                                   </strong>
+                              </li>
                          </ul>
                     </div>
                </div>
@@ -594,105 +602,326 @@
                </div>
                <div class="row border border-dark p-5">
                     <div class="col-sm-12">
-                         <h2 class="text-center ">10 - Les regroupementsavec GROUP BY</h2>
+                         <h2 class="text-center ">10 - Les regroupement avec GROUP BY</h2>
                          <hr>
                     </div>
-                    <div class="col-sm-12 mt-5 ">
-                         
+                    <div class="col-sm-12 mt-5 text-center">
+                         <ul>
+                              <li>Ici on veut connaitre le nombre d'employés par service 
+                                   <strong>
+                                        <code>
+                                             SELECT service, COUNT(*) AS nbrEmploye FROM employes GROUP BY service;
+                                        </code>
+                                   </strong>
+                              </li>
+                              <li>Calculer le nombres d'hommes et de femmes
+                                   <strong>
+                                        <code>
+                                             SELECT sexe, COUNT(*) AS nbrEmploye FROM employes GROUP BY sexe;
+                                        </code>
+                                   </strong>
+
+                              </li>
+                         </ul>
+                    </div>
+               </div>
+               <div class="row border border-dark p-5">
+                    <div class="col-sm-12">
+                         <h2 class="text-center ">11 - Le mot clef HAVING</h2>
+                         <hr>
+                    </div>
+                    <div class="col-sm-12 mt-5 text-center">
                          <ul>
                               <li>
-                                Ici on veut connaître le nombre d'employés par service 
-                                <strong>
-                                    <code>
-                                        SELECT service, COUNT(*) AS nbrEmploye FROM `employes` GROUP BY service;
-                                    </code>
-                                </strong>
-                            </li>
-                            <li>
-                                Ici on veut connaître le nombre d'employés homme et le nombre d'employe femme 
-                                <strong>
-                                    <code>
-                                        SELECT sexe, COUNT(*) AS nbrEmploye FROM `employes` GROUP BY sexe;
-                                    </code>
-                                </strong>
-                            </li>
+                                   Sélectionner et afficher seulement les services qui ont plus de deux employés : 
+                                   <strong>
+                                        <code>
+                                             SELECT service, COUNT(*) AS nbr_Employe  FROM employes GROUP BY service HAVING COUNT(*) > 2
+                                        </code>
+                                   </strong>
+                              </li>
+                         </ul>
+                    </div>
+               </div>
+               <div class="row border border-dark p-5">
+                    <div class="col-sm-12">
+                         <h2 class="text-center ">12 - Requête de modification</h2>
+                         <hr>
+                    </div>
+                    <div class="col-sm-12 mt-5 text-center">
+                         <h6 class="text-center">Mise à jour avec UPDATE</h6>
+                         <ul>
+                              <li>
+                                   Augmenter le salaire d'un employé :
+                                   <strong>
+                                        <code>
+                                             UPDATE employes SET salaire = 2700 WHERE id_employe = 380
+                                        </code>
+                                   </strong>
+                              </li>
+                              <li class="alert alert-danger">
+                                   On utilise toujours des id pour mettre à jour les informations de la base de données car c'est le seul élément unique 
+                              </li>
+                              <li>Pour faire plusieurs mise à jour en même temps il faudra séparer les données par une virgule : 
+                                   <strong>
+                                        <code>
+                                             UPDATE employes SET service = 'direction', salaire = 4000 WHERE id_employe = 380
+                                        </code>
+                                   </strong>
+
+                              </li>
+                         </ul>
+                    </div>
+                    <div class="col-sm-12 mt-5 text-center">
+                         <h6 class="text-center">Supprimer avec DELETE</h6>
+                         <ul>
+                              <li>
+                                   Supprimer l'enregistrement d'un employé avec DELETE :
+                                   <strong>
+                                        <code>
+                                             DELETE from employes WHERE id_employe = 910
+                                        </code>
+                                   </strong>
+                              </li>
+                              
+                              <li>
+                                   Supprimer plusieurs enregistrement avec le code suivant (on supprime toutes les personnes du services contrôle)
+                                   <strong>
+                                        <code>
+                                             DELETE FROM employes WHERE service = 'contrôle'
+                                        </code>
+                                   </strong>
+                              </li>
                          </ul>
                     </div>
 
+
+
+
+
+
                </div>
                <div class="row border border-dark p-5">
-                <div class="col-sm-12">
-                     <h2 class="text-center ">11 - Le mot clef HAVING</h2>
-                     <hr>
-                </div>
-                <div class="col-sm-12 mt-5 ">
-                     
-                     <ul>
-                          <li>
-                           Sélectionner et afficher seulement les services qui ont plus de deux employés: 
+                    <div class="col-sm-12">
+                         <h2 class="text-center ">13 - Requête imbriquée</h2>
+                         <hr>
+                    </div>
+                    <div class="col-sm-12 mt-5 text-center">
+                         <ul>
+                              <li>
+                                   Consiste à éxécuter une requête à l'interieur d'une autre requête, encapsulé dans une autre requête, il n'y a pas de limite dans le nombre de niveaux d'imbrication
+                              </li>
+                              <li>
+                                   Le résultat de chaque requête imbriquée sert de valeur de référence dans la condition de séléction de la requête de niveau supérieur, appelée requête principale 
+                              </li>
+                              <li>
+                                   Afin d'avoir un cas concret et un context favorable à ce type de requête, nous allons modéliser la base de données d'une bibliothèque
+                              </li>
+                         </ul>
+                         <h4 class="text-center">1 - Une BDD bibliothèque</h4>
+                         <p>Les sujets d'une BDD bibliothèque</p>
+                         <ul>
+                              <li>Une table <strong>livres</strong></li>
+                              <li>Une table des <strong>abonnés</strong></li>
+                              <li>Une table <strong>emprunt</strong> qui permet de savoir quel livre a été emprunté par quel abonné et à quel date</li>
+                         </ul>
+                         <p class="alert alert-danger">Ici, on commence à modéliser notre base de données en réfléchissant à ce qui va aller dedans</p>
+                    </div>
+                    <div class="col-sm-12 row">
+                         <div class="col-sm-12 col-md-4">
+                              <img src="assets/img/abonne.png" alt="Image représentant la table abonnes" class="img-fluid">
+                         </div>
+                         <div class="col-sm-12 col-md-4">
+                              <img src="assets/img/livre.png" alt="Image représentant la table livres" class="img-fluid">
+                         </div>
+                         <div class="col-sm-12 col-md-4">
+                              <img src="assets/img/emprunt.png" alt="Image représentant la table emprunt" class="img-fluid">
+                         </div>
+                    </div>
+                    <div class="col-sm-12">
+                         <ul>
+                              <li>
+                                   <h6> Création de la BDD</h6>
+                                   <strong>
+                                        <code>
+                                             ==> CREATE DATABASE IF NOT EXISTS bibliotheque
+                                             DEFAULT CHARACTER SET = 'utf8mb4';
+                                        </code>
+                                   </strong>
+                              </li>
+                         </ul>
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                         <ul>
+                              <li>
+                                   <h6> Création de la première table abonnes</h6>
+                                   <strong>
+                                        <code>
+                                             ==>  CREATE TABLE IF NOT EXISTS abonnes( <br>
+                                                  id_abonne INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT, <br>
+                                                  prenom VARCHAR(20) NULL, 
+                                                   );
+                                             
+                                        </code>
+                                   </strong>
+                              </li>
+                         </ul>
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                         <ul>
+                              <li>
+                                   <h6> Création de la deuxième table livre</h6>
+                                   <strong>
+                                        <code>
+                                             ==>  CREATE TABLE IF NOT EXISTS livres( <br>
+                                                  id_livre INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT, <br>
+                                                  auteur VARCHAR(30) NOT NULL, <br>
+                                                  titre VARCHAR(30) NOT NULL
+                                                   );
+                                             
+                                        </code>
+                                   </strong>
+                              </li>
+                         </ul>
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                         <ul>
+                              <li>
+                                   <h6> Création de la deuxième table emprunt</h6>
+                                   <strong>
+                                        <code>
+                                             ==>  CREATE TABLE IF NOT EXISTS emprunt( <br>
+                                                  id_emprunt INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT, <br>
+                                                  date_sortie DATE  NULL, <br>
+                                                  date_rendu DATE NULL,
+                                                  id_livre INT(3), NULL,
+                                                  id_abonne INT(3) NULL
+                                                   );
+                                             
+                                        </code>
+                                   </strong>
+                              </li>
+                         </ul>
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                         <ul>
+                              <li>
+                                   <h6> Création des clefs étrangères</h6>
+                                   <ul>
+                                        <li> Dans la table emprunt, id_livre sera un champ clé étrangère en référence au champs id_livre de la table livre </li>
+                                   </ul>
+                                   <strong>
+                                        <code>
+                                             ==> ALTER TABLE emprunt ADD FOREIGN KEY (id_livre) REFERenCES bibliotheque.livres(id_livre)
+                                        </code>
+                                   </strong>
+                              </li>
+                         </ul>
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                         <ul>
+                              <li>
+                                   <h6> Création des clefs étrangères</h6>
+                                   <ul>
+                                        <li> Dans la table emprunt, id_livre sera un champ clé étrangère en référence au champs id_livre de la table livre </li>
+                                   </ul>
+                                   <strong>
+                                        <code>
+                                             ==> ALTER TABLE emprunt ADD FOREIGN KEY (id_abonnes) REFERENCES bibliotheque.abonnes(id_abonne);
+                                        </code>
+                                   </strong>
+                              </li>
+                         </ul>
+                    </div>
+                    <div class="col-sm-12 col-md-4 mt-5">
+                         <h6 class="text-center"> Insérer des données dans la table </h6>
+                    </div>
+                    <div>
+                          <ul>
+                              <li> 
+                                    <strong>
+                                             <code>
+                                                   INSERT INTO abonnes(prenom) VALUES <br>
+                                                                                     ('Guillaume'),<br>
+                                                                                     ('Benoit'),<br>
+                                                                                     ('Patrick'),<br>
+                                                                                     ('Jamila');<br>
+                                             </code>
+                                   </strong>
+
+
+                              </li>
+                          </ul>
+                              
+                         </ul>
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                         <ul>
+                             <li> 
+                                    <strong>
+                                        <code>INSERT INTO livre (id_livre, auteur, titre) VALUES <br>
+                                             (100, 'GUY DE MAUPASSANT', 'Une vie'), <br>
+                                             (101, 'GUY DE MAUPASSANT', 'Bel-Ami '), <br>
+                                             (102, 'HONORE DE BALZAC', 'Le père Goriot'), <br>
+                                             (103, 'ALPHONSE DAUDET', 'Le Petit chose'), <br>
+                                             (104, 'ALEXANDRE DUMAS', 'La Reine Margot'), <br>
+                                             (105, 'ALEXANDRE DUMAS', 'Les Trois Mousquetaires');
+                                         </code>
+                                    </strong>
+
+
+                             </li>
+                         </ul>
+                             
+                        </ul>
+                   </div>
+                   <div class="col-sm-12 col-md-4">
+                    <ul>
+                        <li>
                             <strong>
-                                <code>
-                                    SELECT service, COUNT(*) AS nbrEmploye FROM `employes` GROUP BY  service HAVING COUNT(*)>2;
-                                </code>
+                                 <code>INSERT INTO emprunt (id_emprunt, id_livre, id_abonne, date_sortie, date_rendu) VALUES <br>
+                                     (NULL, 100, 1, '2014-12-17', '2014-12-18'), <br>
+                                     (NULL, 101, 2, '2014-12-18', '2014-12-20'), <br>
+                                     (NULL, 100, 3, '2014-12-19', '2014-12-22'), <br>
+                                     (NULL, 103, 4, '2014-12-19', '2014-12-22'), <br>
+                                     (NULL, 104, 1, '2014-12-19', '2014-12-28'), <br>
+                                     (NULL, 105, 2, '2015-03-20', '2015-03-26'), <br>
+                                     (NULL, 105, 3, '2015-06-13', NULL), <br>
+                                     (NULL, 100, 2, '2015-06-15', NULL);</code>
                             </strong>
                         </li>
-                     </ul>
+                    </ul>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    <h6> Exemple de requêtes </h6>
+                    <ul>
+                        <li>
+                           On cherche les livres qui n'ont pas été rendu 
+                           <strong>
+                              <code>
+                                   SELECT id_livre FROM emprunt WHERE date_rendu IS NULL;
+                              </code>
+                           </strong>
+                        </li>
+                        <li class="alert alert-danger">
+                         Pour trouver un  résultat est NULL on utilise le terme <em>IS </em> 
+                         <code>
+                              SELECT id_livre FROM emprunt WHERE date_rendu IS NULL;
+                         </code> ne retourne aucun resultat
+                        </li>
+                        <li>
+                         On cherche les titres des livres qui n'ont pas été rendu 
+                         <strong>
+                              <code>
+                                   ==> SELECT titre FROM livres WHERE id_livre IN (SELECT id_livre FROM emprunt WHERE date_rendu IS NULL);
+                              </code>
+                         </strong>
+                        </li>
+                    </ul>
                 </div>
 
-           </div>
-           <div class="row border border-dark p-5">
-            <div class="col-sm-12">
-                 <h2 class="text-center ">12 - MISE à jour avec UPDATE</h2>
-                 <hr>
-            </div>
-            <div class="col-sm-12 mt-5 ">
-                 
-                 <ul>
-                      <li>
-                        Augmenter le salaire d'un employé
-                        <strong>
-                            <code>
-                                UPDATE employes SET salaire = 2700  WHERE prenom = Paul;
-                            </code>
-                        </strong>
-                    </li>
-                    <li class="alert alert-danger">
-                        On utilise toujours des id pour mèttre à jour les informations de la base de donnée car c'est le seul élément unique
-                    </li>
-                    <li>
-                        Pour faire plusieurs mises à jour en même temps il faudra séparer les données par virgule:
-                        <strong>
-                            <code>
-                                UPDATE employes SET service = 'direction', salaire = 4000  WHERE id_employer = 380
-                            </code>
-                        </strong>
-                    </li>
-                 </ul>
-            </div>
-            <div class="col-sm-12 mt-5 text-center">
-                <h6 class="text-center"> Supprimer avec DELETE </h6>
-                <ul>
-                     <li> Supprimer l'enregistrement d'un employé avec DELETE
-                          <strong>
-                               <code>
-                                    DELETE  FROM employes WHERE id_employe = 910
-                               </code>
-                          </strong>
-                     </li>
-                     <li>  Supprimer plusieurs enregistrement avec le code suivant (on supprime toute les personnes du service controle ) 
-                        <strong>
-                            <code>
-                                DELETE FROM employes WHERE service ='controle'
-                            </code>
-                        </strong>
-                     </li>
-                     
 
-       </div>
-
-
-
-
+               </div>
 
 
 
