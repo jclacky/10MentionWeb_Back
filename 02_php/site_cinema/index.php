@@ -1,6 +1,12 @@
 <?php
 require_once "inc/functions.inc.php";
 $info = '';
+
+if(empty($_SESSION['user']) ) {
+
+    header("location:".RACINE_SITE."authentification.php");
+
+} 
 if (isset($_GET)  && !empty($_GET) ) {
 
     if (isset($_GET['id_category']) ) {

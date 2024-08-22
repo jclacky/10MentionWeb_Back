@@ -17,6 +17,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 
+    <!-- Script ppour stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
     <link rel="stylesheet" href="<?=RACINE_SITE?>assets/css/style.css">
     <title></title>
 </head>
@@ -120,10 +122,12 @@
     
     
     
-                            
+                         
                             
                             <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="bi bi-cart fs-2"></i></a>
+                                <a class="nav-link" href="<?=RACINE_SITE?>boutique/panier.php"><i class="bi bi-cart fs-2"> <sup class="badge text-bg-danger text-bg-secondary">  <?=
+                             
+                            (!empty($_SESSION['panier'])) && !empty($_SESSION['user']) ? count($_SESSION['panier']) : ''?></sup></i></a>
                             </li>
                             
                             

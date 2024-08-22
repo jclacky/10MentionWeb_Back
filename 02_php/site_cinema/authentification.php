@@ -92,7 +92,7 @@ require_once "inc/header.inc.php";
 
 
 
-<main style="background:url(assets/img/5818.png) no-repeat; background-size: cover; background-attachment: fixed;">
+<main style="background:url(assets/img/avatar_h.png) no-repeat; background-size: cover; background-attachment: fixed;">
      <?php
         var_dump($_POST); 
      ?>

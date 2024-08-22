@@ -255,17 +255,17 @@ function inscriptionUsers(string $lastName, string $firstName, string $pseudo, s
     //$requet est à cette ligne  encore un objet PDOstatement .
     $request->execute(array(
         ":lastName" => $data['lastName'], 
-        ":firstName" => $data['$firstName'], 
-        ":pseudo" => $data['$pseudo'], 
-        ":email" => $data['$email'], 
-        ":phone" => $data['$phone'], 
-        ":mdp" => $data['$mdp'], 
-        ":civility" => $data['$civility'], 
-        ":birthday" => $data['$birthday'], 
-        ":address" => $data['$address'], 
-        ":zip" => $data['$zip'], 
-        ":city" => $data['$city'], 
-        ":country" => $data['$country']
+        ":firstName" => $data['firstName'], 
+        ":pseudo" => $data['pseudo'], 
+        ":email" => $data['email'], 
+        ":phone" => $data['phone'], 
+        ":mdp" => $data['mdp'], 
+        ":civility" => $data['civility'], 
+        ":birthday" => $data['birthday'], 
+        ":address" => $data['address'], 
+        ":zip" => $data['zip'], 
+        ":city" => $data['city'], 
+        ":country" => $data['country']
 
     )); // execute() permet d'exécuter toute la requête préparée avec prepare().
 
@@ -731,10 +731,91 @@ function filmByDate (): mixed{
         $result = $request->fetchAll();
             return $result;
         }
+       
+    //    -------------- Calcul du montant total --------------
+    function calculMontantTotal(array $tab) {
 
-        
-        
-    
+        $montantTotal = 0;
+        foreach ($tab as $key) {
+           $montantTotal += $key['price'] * $key['quantite'];
 
+        }
+        return $montantTotal;
+    }
+        
+        // créer la table commandes
+        function createTableOrders(){
+
+            $pdo = connexionBdd();
+            $sql = " CREATE TABLE IF NOT EXISTS orders (
+                 id_order INT PRIMARY KEY AUTO_INCREMENT,
+                 user_id INT NOT NULL,
+                 price FLOAT,
+                 created_at DATETIME,
+                 is_paid ENUM('0', '1')
+            )";
+            $request = $pdo->exec($sql);
+        
+        }
+
+        // createTableOrders();
+        // foreignkey('orders', 'user_id', 'users', 'id_user');
+        function createTableOrderDetails(){
+
+            $pdo = connexionBdd();
+            $sql = " CREATE TABLE IF NOT EXISTS order_details (
+                 order_id INT NOT NULL,
+                 film_id INT NOT NULL,
+                 price_film FLOAT NOT NULL,
+                 quantity INT NOT NULL
+                
+            )";
+            $request = $pdo->exec($sql);
+        
+        }
+        // createTableOrderDetails();
+        // foreignKey('order_details','film_id','films','id_film');
+        
+
+        function addOrder(int $user_id, float $price, string $created_at, string $is_paid) :bool{
+
+            $cnx = connexionBdd();
+             $sql = "INSERT INTO orders(user_id, price, created_at, is_paid) VALUES (:user_id, :price, :created_at, :is_paid)";
+             $request = $cnx->prepare($sql);
+             $request->execute(array( 
+                  ':user_id'     =>$user_id,
+                  ':price'       =>$price, 
+                  ':created_at'  =>$created_at, 
+                  ':is_paid'     =>$is_paid
+                 
+                  ));
+                if($request){
+                    return true;
+                }
+        }
+        function lastId(): array{
+            $cnx = connexionBdd();
+            $sql = "SELECT MAX(id_order) AS lastId FROM orders";
+            $request= $cnx->query($sql);
+            $result= $request->fetch();
+            return $result;
+        
+        }
+        
+        function addOrderDetails(int $orderId, int $filmId, float $filmPrice, int $quantity) :void{
+        
+            $cnx = connexionBdd();
+            $sql = "INSERT INTO order_details(order_id, film_id, price_film, quantity) VALUES (:order_id, :film_id, :price_film,:quantity)";
+            $request = $cnx->prepare($sql);
+            $request->execute(array( 
+                 ':order_id'     => $orderId,
+                 ':film_id'      => $filmId,
+                 ':price_film'   => $filmPrice, 
+                 ':quantity'     => $quantity, 
+                 ));
+            
+        
+        }
+        
 
 ?>
